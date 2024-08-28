@@ -11,7 +11,7 @@ const MainContainer = () => {
         return Math.floor(Math.random() * 19) + 1;
       }
     const mainMovie = movies[getRandomNumber()];
-    console.log(mainMovie);
+    // console.log(mainMovie);
     const {original_title, overview, id} = mainMovie;
 
   return (

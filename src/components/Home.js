@@ -88,7 +88,6 @@ export const SignUpDetails = () => {
       navigate("/home");
     })
     .catch((error) => {
-      const errorCode = error.code;
       const errorMessage = error.message;
       setErrorMessage(errorMessage)
     });
