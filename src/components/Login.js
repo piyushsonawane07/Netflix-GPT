@@ -1,11 +1,32 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Header from "./Header";
+import { checkValidData } from "../utils/validate";
+import { Link } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../utils/firebase";
 
 const Login = () => {
-  const [isSignInForm, setIsSignInForm] = useState(true);
+  const [errorMessage, setErrorMessage] = useState(null);
 
-  const toggleSignInForm = () => {
-    setIsSignInForm(!isSignInForm);
+  const email = useRef(null);
+  const password = useRef(null);
+
+  const handleButtonClick = () => {
+    const errorMessage = checkValidData(
+      email.current.value,
+      password.current.value
+    );
+
+    setErrorMessage(errorMessage);
+
+    signInWithEmailAndPassword(auth, email.current.value, password.current.value)
+    .then((userCredential) => { 
+      const user = userCredential.user;
+    })
+    .catch((error) => {
+      const errorMessage = error.message;
+      setErrorMessage(errorMessage);
+    });
   };
 
   return (
@@ -22,67 +43,45 @@ const Login = () => {
         <div className="relative z-10">{/* Your content goes here */}</div>
       </div>
       <div className="absolute z-30 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-        <form className="bg-black bg-opacity-70 px-12 py-12 h-[700px] w-[500px]">
-          <h3 className="font-bold text-white text-2xl">
-            {isSignInForm ? "Sign In" : "Sign Up"}
-          </h3>
+        <form
+          onSubmit={(e) => e.preventDefault()}
+          className="bg-black bg-opacity-70 px-12 py-12 h-[620px] w-[460px]"
+        >
+          <h3 className="font-bold text-white text-2xl">Sign In</h3>
           <input
-            type="email"
+            ref={email}
+            type="text"
             placeholder="Email or mobile number"
             className="mt-6 p-4 text-white text-sm bg-black bg-opacity-60 border border-gray-700 rounded-md w-full"
           />
-          {!isSignInForm && (
-            <input
-              type="text"
-              placeholder="Full name"
-              className="mt-6 p-4 text-white text-sm bg-black bg-opacity-60 border border-gray-700 rounded-md w-full"
-            />
-          )}
+
           <input
+            ref={password}
             type="password"
             placeholder="Password"
             className="mt-6 p-4 text-white text-sm bg-black bg-opacity-60 border border-gray-700 rounded-md w-full"
           />
-          {!isSignInForm && (
-            <input
-              type="password"
-              placeholder="Re-enter Password"
-              className="mt-6 p-4 text-white text-sm bg-black bg-opacity-60 border border-gray-700 rounded-md w-full"
-            />
-          )}
-          <button className="mt-4 p-3 rounded-md bg-[#C31119] text-white font-semibold w-full">
-            {isSignInForm ? "Sign In" : "Sign Up"}
+
+          <span className="text-red-600 text-sm">{errorMessage}</span>
+          <button
+            onClick={handleButtonClick}
+            className="mt-4 p-3 rounded-md bg-[#C31119] text-white font-semibold w-full"
+          >
+            Sign In
           </button>
-          {isSignInForm ? (
-            <h4 className="text-center text-white mt-4 text-sm">
-              Forgot password ?
-            </h4>
-          ) : (
-            ""
-          )}
-          {isSignInForm ? (
-            <h4 className="mt-5">
-              <span className="text-gray-400 text-sm">New to Netflix?</span>
-              <span
-                className="text-white text-sm cursor-pointer"
-                onClick={toggleSignInForm}
-              >
-                {" "}
+
+          <h4 className="text-center text-white mt-4 text-sm cursor-pointer">
+            Forgot password ?
+          </h4>
+
+          <h4 className="mt-5 cursor-pointer">
+            <span className="text-gray-400 text-sm">New to Netflix?</span>
+            <Link to={"/"}>
+              <span className="text-white text-sm cursor-pointer mx-1">
                 Sign up now.
               </span>
-            </h4>
-          ) : (
-            <h4 className="mt-5">
-              <span className="text-gray-400 text-sm">Already a user?</span>
-              <span
-                className="text-white text-sm cursor-pointer"
-                onClick={toggleSignInForm}
-              >
-                {" "}
-                Sign in now.
-              </span>
-            </h4>
-          )}
+            </Link>
+          </h4>
 
           <h4 className="text-gray-400 mt-4 text-xs mr-14">
             This page is protected by Google reCAPTCHA to ensure you're not a
