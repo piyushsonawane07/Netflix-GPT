@@ -7,12 +7,18 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { addUser, removeUser } from "../utils/userSlice";
 import { LOGO_URL } from "../utils/constants";
+import { toggleGptSearchView } from "../utils/gptSlice";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
+  const showGptSearch = useSelector((store) => store.gpt.showGptSearch);
+
+  const handleGptSearchClick = () => {
+    dispatch(toggleGptSearchView());
+  }
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -56,7 +62,11 @@ const Header = () => {
         className="object-contain"
       />
       {user && (
-        <div className="relative">
+        
+        <div className="relative flex">
+          <div className="mx-10">
+          <button onClick={handleGptSearchClick} className="w-full mt-1 text-white text-sm font-semibold rounded-md bg-[#C31119]  px-2 py-2">{!showGptSearch ? "GPT Search" : "Home"}</button>
+          </div>
           <img
             src={user.photoURL}
             width={40}
@@ -64,6 +74,7 @@ const Header = () => {
             className="cursor-pointer rounded-sm"
             onClick={toggleMenu}
           />
+          
           {menuOpen && (
             <div className="absolute right-0 mt-2 py-2 w-48 bg-black opacity-90 rounded-lg shadow-lg">
               <button
