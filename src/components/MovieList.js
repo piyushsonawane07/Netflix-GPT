@@ -5,7 +5,7 @@ const MovieList = ({ title, movies }) => {
   if (!movies || movies.length === 0) {
     return <div>No movies available.</div>;
   }
-
+  
   return (
     <div className='py-4 px-6 scrollbar-hide'>
       <h1 className='text-white text-2xl font-bold mb-4'>{title}</h1>

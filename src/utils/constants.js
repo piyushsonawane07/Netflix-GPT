@@ -6,8 +6,10 @@ export const TMDB_API_OPTIONS = {
   headers: {
     accept: "application/json",
     Authorization:
-      "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5MGU1OWY1MThjMGIyM2Q4OGI1MTJhYmM1NmI3MDdkNyIsIm5iZiI6MTcyNDU2NzY3Ni41OTg2MzEsInN1YiI6IjYxNjgxZjk1MTU4Yzg1MDAyYzJkYmU5ZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.odm4jMht1ltI8MEZK5W6cI5zmr-VCYiyyBZJUy2sxRs",
+      "",
   },
 };
 
 export const POSTER_CDN_URL = "https://image.tmdb.org/t/p/w200"
+
+export const OPENAI_API_KEY = ""

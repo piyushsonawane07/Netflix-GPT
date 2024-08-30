@@ -1,16 +1,50 @@
 import React, { useState } from "react";
 import GptMovieSuggestions from "./GptMovieSuggestions";
+import openai from './../utils/openai';
+import { TMDB_API_OPTIONS } from "../utils/constants";
+import { json } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addGptSuggestions } from "../utils/gptSlice";
 
 const GptSearch = () => {
   const [query, setQuery] = useState("");
+  const dispatch = useDispatch();
 
   const handleInputChange = (e) => {
     setQuery(e.target.value);
   };
 
-  const handleSearch = () => {
-    console.log("Search query:", query);
-    // Add your search logic here
+  const searchMovie = async (movieName) => {
+    const data = await fetch(`https://api.themoviedb.org/3/search/movie?query=${movieName}&include_adult=false&language=en-US&page=1`, TMDB_API_OPTIONS)
+    const json = await data.json();
+    return json.results;
+  }
+
+  const handleSearch = async () => {
+    // console.log("Search query:", query);
+    const prompt = "Act as a movie recommendation system and suggest some movies for the query: " + query +". only give me comma seperated names of five movies dont give numbers return in single line.  e.g movie1, movie2, movie3..."
+    const results = await openai.chat.completions.create({
+      messages: [{role: 'user', content: prompt}],
+      model: 'gpt-3.5-turbo',
+    });
+
+    console.log(results.choices[0]?.message?.content);
+
+    if(!results.choices) return;
+    const movies = results.choices[0]?.message?.content.split(',');
+
+    const data = movies.map(movie => searchMovie(movie))
+    const tmdbResults = await Promise.all(data);
+
+    const filteredResults = tmdbResults.map((result, index) => {
+      return result.filter(movie => 
+        movie.title.toLowerCase() === movies[index].trim().toLowerCase() && 
+        movie.original_language === 'hi'
+      );
+    });
+    
+    dispatch(addGptSuggestions(filteredResults));
+    
   };
 
   return (
