@@ -12,4 +12,4 @@ export const TMDB_API_OPTIONS = {
 
 export const POSTER_CDN_URL = "https://image.tmdb.org/t/p/w200"
 
-export const OPENAI_API_KEY = process.env.OPEN_AI_KEY
+export const OPENAI_API_KEY = process.env.OPENAI_API_KEY

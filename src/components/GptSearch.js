@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import GptMovieSuggestions from "./GptMovieSuggestions";
 import openai from './../utils/openai';
 import { TMDB_API_OPTIONS } from "../utils/constants";
-import { json } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addGptSuggestions } from "../utils/gptSlice";
 
