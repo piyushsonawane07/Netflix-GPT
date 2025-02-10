@@ -6,7 +6,7 @@ export const TMDB_API_OPTIONS = {
   method: "GET",
   headers: {
     accept: "application/json",
-    Authorization: process.env.TMDB_AUTH,
+    Authorization: process.env.REACT_APP_TMDB_AUTH,
   },
 };
 
